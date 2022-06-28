@@ -19,6 +19,8 @@ func main() {
 		switch flagArr[0] {
 		case "pub":
 			app.Publisher()
+		case "pub_async":
+			app.PublishAsync()
 		case "sub":
 			app.Subscribe()
 		}

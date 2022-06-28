@@ -55,9 +55,13 @@ func NewNatsPublisher(stanClusterID, clientID string) *NatsPublisher {
 	return _natsPublisher
 }
 
-func (n *NatsPublisher) Publish(topic string, data []byte) (string, error) {
+func (n *NatsPublisher) PublishAsync(topic string, data []byte) (string, error) {
 	return n.conn.PublishAsync(topic, data, func(s string, err error) {
 	})
+}
+
+func (n *NatsPublisher) Publish(topic string, data []byte) error {
+	return n.conn.Publish(topic, data)
 }
 
 func (n *NatsPublisher) Subscribe(topic string, handler stan.MsgHandler, opts ...stan.SubscriptionOption) (stan.Subscription, error) {
