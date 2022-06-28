@@ -15,7 +15,7 @@ func Publisher() {
 		topic = "test-1"
 	}
 	for {
-		err := publisher.Publish(topic, []byte("{\"id\":\"111111111\"}"))
+		_, err := publisher.Publish(topic, []byte(fmt.Sprintf("{\"id\":\"%v\"}", index)))
 		if err != nil {
 			fmt.Println(err)
 		}
