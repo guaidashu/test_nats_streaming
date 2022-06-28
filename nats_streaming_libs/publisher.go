@@ -3,7 +3,9 @@ package nats_streaming_libs
 import (
 	"fmt"
 	"github.com/nats-io/stan.go"
+	"os"
 	"sync"
+	"time"
 )
 
 type (
@@ -28,9 +30,17 @@ func NewNatsPublisher(stanClusterID, clientID string) *NatsPublisher {
 		// )
 
 		_natsPublisher.conn, err = stan.Connect(stanClusterID, clientID,
-			stan.NatsURL("nats://127.0.0.1:4222"),
-			stan.NatsURL("nats://127.0.0.1:4223"),
-			stan.NatsURL("nats://127.0.0.1:4224"),
+			// stan.NatsURL("nats://127.0.0.1:4222"),
+			// stan.NatsURL("nats://127.0.0.1:4222"),
+			// stan.NatsURL("nats://127.0.0.1:4222"),
+			stan.NatsURL(os.Getenv("NATS_URL_1")),
+			stan.NatsURL(os.Getenv("NATS_URL_2")),
+			stan.NatsURL(os.Getenv("NATS_URL_3")),
+			func(options *stan.Options) error {
+				options.AckTimeout = time.Second * 60
+				options.MaxPubAcksInflight = 1000000
+				return nil
+			},
 		)
 
 		// _natsPublisher.conn, err = stan.Connect("test-cluster",
@@ -50,5 +60,6 @@ func (n *NatsPublisher) Publish(topic string, data []byte) error {
 }
 
 func (n *NatsPublisher) Subscribe(topic string, handler stan.MsgHandler, opts ...stan.SubscriptionOption) (stan.Subscription, error) {
+	opts = append(opts, stan.SetManualAckMode())
 	return n.conn.Subscribe(topic, handler, opts...)
 }
