@@ -6,7 +6,7 @@ import (
 	"test_nats_streaming/nats_streaming_libs"
 )
 
-func Publisher() {
+func Publisher(num int) {
 	publisher := nats_streaming_libs.NewNatsPublisher("diss-cluster", "test-cluster-123")
 	var index = 1
 
@@ -21,7 +21,7 @@ func Publisher() {
 		}
 
 		index = index + 1
-		if index > 300 {
+		if index > num {
 			break
 		}
 	}
@@ -29,7 +29,7 @@ func Publisher() {
 	fmt.Println(index)
 }
 
-func PublishAsync() {
+func PublishAsync(num int) {
 	publisher := nats_streaming_libs.NewNatsPublisher("diss-cluster", "test-cluster-123")
 	var index = 1
 
@@ -44,7 +44,7 @@ func PublishAsync() {
 		}
 
 		index = index + 1
-		if index > 300 {
+		if index > num {
 			break
 		}
 	}
