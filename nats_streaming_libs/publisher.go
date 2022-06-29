@@ -57,6 +57,9 @@ func NewNatsPublisher(stanClusterID, clientID string) *NatsPublisher {
 
 func (n *NatsPublisher) PublishAsync(topic string, data []byte) (string, error) {
 	return n.conn.PublishAsync(topic, data, func(s string, err error) {
+		if err != nil {
+			fmt.Println(err)
+		}
 	})
 }
 
