@@ -25,7 +25,7 @@ func Subscribe() {
 		if e != nil {
 			fmt.Println(e)
 		}
-	}, stan.AckWait(time.Second*20))
+	}, stan.AckWait(time.Second*60), stan.DurableName("test-group123"))
 	if err != nil {
 		fmt.Println(err)
 	}
