@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-var ClientNum = 1
+var ClientNum = 10
 
 type (
 	NatsPublisher struct {
