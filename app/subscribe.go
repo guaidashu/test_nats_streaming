@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"test_nats_streaming/nats_streaming_libs"
-	"time"
 )
 
 func Subscribe() {
@@ -19,13 +18,13 @@ func Subscribe() {
 	}
 	subscribe := nats_streaming_libs.NewNatsPublisher(0)
 	sub, err := subscribe.Subscribe(topic, func(msg *stan.Msg) {
-		fmt.Println(string(msg.Data))
+		// fmt.Println(string(msg.Data))
 		// 确认消息
 		e := msg.Ack()
 		if e != nil {
 			fmt.Println(e)
 		}
-	}, stan.AckWait(time.Second*60), stan.DurableName("test-group123"))
+	}, stan.DurableName("test-group123"))
 	if err != nil {
 		fmt.Println(err)
 	}
