@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"test_nats_streaming/app"
+	"test_nats_streaming/nats_streaming_libs"
 )
 
 func main() {
@@ -19,6 +20,9 @@ func main() {
 	if len(flagArr) >= 1 {
 		if len(flagArr) >= 2 {
 			num, _ = strconv.Atoi(flagArr[1])
+		}
+		if len(flagArr) >= 3 {
+			nats_streaming_libs.ClientNum, _ = strconv.Atoi(flagArr[2])
 		}
 		// 进入选择
 		switch flagArr[0] {

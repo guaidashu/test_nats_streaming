@@ -17,7 +17,7 @@ func Subscribe() {
 	if topic == "" {
 		topic = "test-1"
 	}
-	subscribe := nats_streaming_libs.NewNatsPublisher("diss-cluster", "test-cluster124")
+	subscribe := nats_streaming_libs.NewNatsPublisher(0)
 	sub, err := subscribe.Subscribe(topic, func(msg *stan.Msg) {
 		fmt.Println(string(msg.Data))
 		// 确认消息

@@ -5,8 +5,9 @@ import (
 	"github.com/nats-io/stan.go"
 	"os"
 	"sync"
-	"time"
 )
+
+var ClientNum = 1
 
 type (
 	NatsPublisher struct {
@@ -15,44 +16,34 @@ type (
 )
 
 var (
-	_natsPublisher     *NatsPublisher
+	_natsPublisher     []*NatsPublisher
 	_natsPublisherOnce sync.Once
 )
 
-func NewNatsPublisher(stanClusterID, clientID string) *NatsPublisher {
+func NewNatsPublisher(id int) *NatsPublisher {
 	_natsPublisherOnce.Do(func() {
 		var err error
-		_natsPublisher = &NatsPublisher{}
-		// _natsPublisher.conn, err = stan.Connect(stanClusterID, clientID,
-		// 	stan.NatsURL("nats://139.155.70.249:4222"),
-		// 	stan.NatsURL("nats://139.155.70.249:4223"),
-		// 	stan.NatsURL("nats://139.155.70.249:4224"),
-		// )
+		_natsPublisher = make([]*NatsPublisher, 0, ClientNum)
 
-		_natsPublisher.conn, err = stan.Connect(stanClusterID, clientID,
-			// stan.NatsURL("nats://127.0.0.1:4222"),
-			// stan.NatsURL("nats://127.0.0.1:4222"),
-			// stan.NatsURL("nats://127.0.0.1:4222"),
-			stan.NatsURL(os.Getenv("NATS_URL_1")),
-			stan.NatsURL(os.Getenv("NATS_URL_2")),
-			stan.NatsURL(os.Getenv("NATS_URL_3")),
-			func(options *stan.Options) error {
-				options.AckTimeout = time.Second * 60
-				options.MaxPubAcksInflight = 1000000
-				return nil
-			},
-		)
+		for i := 0; i < ClientNum; i++ {
+			c := &NatsPublisher{}
+			c.conn, err = stan.Connect("diss-cluster", fmt.Sprintf("test-cluster-%v", i),
+				// c.conn, err = stan.Connect("test-cluster", fmt.Sprintf("test-cluster-id%v", i),
+				stan.NatsURL(os.Getenv("NATS_URL_1")),
+				stan.NatsURL(os.Getenv("NATS_URL_2")),
+				stan.NatsURL(os.Getenv("NATS_URL_3")),
+				// stan.NatsURL("nats://127.0.0.1:4222"),
+			)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
 
-		// _natsPublisher.conn, err = stan.Connect("test-cluster",
-		// 	"client-124",
-		// 	stan.NatsURL("nats://127.0.0.1:4222"),
-		// )
-		if err != nil {
-			fmt.Println(err)
+			_natsPublisher = append(_natsPublisher, c)
 		}
 	})
 
-	return _natsPublisher
+	return _natsPublisher[id]
 }
 
 func (n *NatsPublisher) PublishAsync(topic string, data []byte) (string, error) {

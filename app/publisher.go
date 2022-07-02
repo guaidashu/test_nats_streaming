@@ -7,7 +7,6 @@ import (
 )
 
 func Publisher(num int) {
-	publisher := nats_streaming_libs.NewNatsPublisher("diss-cluster", "test-cluster-123")
 	var index = 1
 
 	topic := os.Getenv("NATS_TEST_TOPIC")
@@ -15,6 +14,7 @@ func Publisher(num int) {
 		topic = "test-1"
 	}
 	for {
+		publisher := nats_streaming_libs.NewNatsPublisher(index % nats_streaming_libs.ClientNum)
 		err := publisher.Publish(topic, []byte(fmt.Sprintf("{\"id\":\"%v\"}", index)))
 		if err != nil {
 			fmt.Println(err)
@@ -30,7 +30,6 @@ func Publisher(num int) {
 }
 
 func PublishAsync(num int) {
-	publisher := nats_streaming_libs.NewNatsPublisher("diss-cluster", "test-cluster-123")
 	var index = 1
 
 	topic := os.Getenv("NATS_TEST_TOPIC")
@@ -38,6 +37,7 @@ func PublishAsync(num int) {
 		topic = "test-1"
 	}
 	for {
+		publisher := nats_streaming_libs.NewNatsPublisher(index % nats_streaming_libs.ClientNum)
 		_, err := publisher.PublishAsync(topic, []byte(fmt.Sprintf("{\"id\":\"%v\"}", index)))
 		if err != nil {
 			fmt.Println(err)
