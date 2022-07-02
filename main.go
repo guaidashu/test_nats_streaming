@@ -56,10 +56,10 @@ func main() {
 		// 启动推送
 		waitGroup := sync.WaitGroup{}
 		startTime := time.Now().UnixNano()
-		for i := 0; i < 10000; i++ {
+		for i := 0; i < num; i++ {
 			waitGroup.Add(1)
 			go func() {
-				app.Publisher(num)
+				app.Publisher(3)
 				waitGroup.Done()
 			}()
 		}
