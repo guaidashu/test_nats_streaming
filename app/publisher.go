@@ -25,8 +25,6 @@ func Publisher(num int) {
 			break
 		}
 	}
-
-	fmt.Println(index)
 }
 
 func PublishAsync(num int) {
